@@ -5,3 +5,18 @@ $fa-font-path: '../webfonts';
 @import '@fortawesome/fontawesome-free/scss/solid.scss';
 
 @import 'bootstrap/scss/bootstrap';
+
+body{
+    color: #fff;
+    background-color: $darkblue;
+}
+
+img{
+    max-width: 100%;
+}
+a{
+    text-decoration: none;
+}
+ul{
+    list-style: none;
+}
