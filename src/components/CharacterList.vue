@@ -1,13 +1,13 @@
 <template>
     <div class="container bg-white">
-        <div v-if="loading">
+        <div v-if="store.loading">
             Sto caricando i dati
         </div>
-        <div class="row" v-if="!loading">
+        <div class="row" v-if="!store.loading">
             <div class="bg-dark">
-                <p>Found {{count}} characters</p>
+                <ResultCount/>
             </div>
-            <div class="col-12 col-sm-6 col-md-4 col_lg_2" v-for="(item, index) in characters" :key="item.id">
+            <div class="col-12 col-sm-6 col-md-4 col_lg_2" v-for="(item, index) in store.characterList" :key="item.id">
                 <CardComponent :character="item" />
             </div>
         </div>
@@ -15,14 +15,15 @@
 </template>
 
 <script>
+import {store} from '../store.js'
 import CardComponent from './CardComponent.vue';
+import ResultCount from './ResultCount.vue';
 export default {
     name: 'CharacterList',
-    components: { CardComponent },
-    props: ["characters", "loading", "count"],
+    components: { CardComponent, ResultCount },
     data() {
         return{
-            
+            store
         }
     },
     
@@ -44,11 +45,7 @@ export default {
 .bg-black{
     background-color: $black;
 }
-p{
-    padding-top: 1rem;
-    font-weight: 700;
-    
-}
+
 
 @media (min-width: 992px){
     .col_lg_2{

@@ -1,14 +1,19 @@
 <template>
-  <AppHeader/>
+  <AppHeader />
   <main>
-  <AppSearch/>
-  <CharacterList :characters="characterList" :loading="loading" :count="count"/>
+    <AppSearch @fliterchar="getCharacters" />
+    <CharacterList />
+    <div v-if="store.errormessage">
+      <h1>Ops! Qualcosa è andato storto</h1>
+      <p>{{ store.errormessage }}</p>
+    </div>
   </main>
 
 </template>
 
 <script>
 import axios from 'axios';
+import {store} from './store.js'
 import AppHeader from './components/AppHeader.vue';
 import AppSearch from './components/AppSearch.vue';
 import CharacterList from './components/CharacterList.vue';
@@ -22,28 +27,48 @@ export default {
 
   data() {
     return {
-      apiURL: 'https://www.breakingbadapi.com/api/characters',
-      characterList: [],
-      loading: false,
-      count: 0,
+      store,
+      endPoint: 'characters',
+
     }
   },
   methods: {
     getCharacters() {
-      this.loading = true;
-      axios.get(this.apiURL).then(
+      store.errormessage = ''
+      let options = null;
+      if (store.search.category && store.search.name) {
+        options = {
+          params: {
+            category: store.search.category,
+            name: store.search.name
+          }
+        }
+      } else if (store.search.category) {
+        options = {
+          params: {
+            category: store.search.category
+          }
+        }
+      } else if (store.search.name) {
+        options = {
+          params: {
+            name: store.search.name
+          }
+        }
+      }
+      store.loading = true;
+      const apiurl = store.apiURL + this.endPoint;
+      axios.get(apiurl, options).then(
         (res) => {
-          this.characterList = [...res.data];
-          console.log(this.characterList);
-          this.count = this.characterList.length;
-          console.log(this.count);
-
-
-
-          this.loading = false;
+          store.characterList = [...res.data];
+          // console.log(store.characterList);
+          store.loading = false;
         }
       ).catch((error) => {
-        console.log(error);
+        store.characterList.length = 0
+        store.loading = false;
+        store.errormessage = error.message
+        // console.log(error);
       })
     }
   },

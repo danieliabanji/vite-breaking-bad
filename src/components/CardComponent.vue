@@ -35,7 +35,7 @@
             }
     
             img {
-                // height: 280px;
+                height: 280px;
                 object-fit: cover;
                 padding: 0.75rem;
             }
